@@ -6,5 +6,8 @@ services:
   - docker
 
 after_success:
-  - docker build -t se_methods .
-  - docker run se_methods
+  - docker network create --driver bridge Group-F
+  - docker pull mongo
+  - docker run -d --name mongo-dbserver --network Group-F mongo
+  - docker build -t Group-F .
+  - docker run --network Group-F Group-F

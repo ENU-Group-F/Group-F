@@ -1,4 +1,4 @@
 FROM openjdk:latest
-COPY ./target/classes/com /tmp/com
+COPY ./target/Group-F-1.0-SNAPSHOT-jar-with-dependencies.jar /tmp
 WORKDIR /tmp
-ENTRYPOINT ["java", "com.napier.groupF.App"]
+ENTRYPOINT ["java", "-jar", "Group-F-1.0-SNAPSHOT-jar-with-dependencies.jar"]

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.napier.groupf</groupId>
-    <artifactId>Group-F</artifactId>
+    <artifactId>group-f</artifactId>
     <version>0.1.0.2</version>
 
     <dependencies>

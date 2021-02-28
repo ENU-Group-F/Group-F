@@ -2,17 +2,25 @@
 
 actor BM as "Brand Manager"
 
+actor BR as "Branch Manager"
+
 rectangle Database
 
 rectangle "Company System" {
     usecase UC1 as "Get population
                     by region"
-
     usecase UCa as "Print populations"
 
+    usecase UC2 as "Get top capital
+    cities by continent"
+    usecase UCb as "Print capitals"
     BM - UC1
     UC1 ..> UCa : include
     UC1 - Database
+
+    BR - UC2
+    UC2 ..> UCb : include
+    UC2 - Database
 }
 
 @enduml

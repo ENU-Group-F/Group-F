@@ -1,10 +1,5 @@
 package com.napier.groupF;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,7 +11,7 @@ public class App
         try
         {
             // Load Database driver
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         }
         catch (ClassNotFoundException e)
         {
@@ -34,8 +29,12 @@ public class App
             {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
-                // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false", "root", "example");
+                // Connect to database locally
+//                con = DriverManager.getConnection("jdbc:mysql://localhost:33060/world?useSSL=true", "root", "example");
+
+                // Connect to database inside docker
+                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=true", "root", "example");
+
                 System.out.println("Successfully connected");
                 // Wait a bit
                 Thread.sleep(10000);

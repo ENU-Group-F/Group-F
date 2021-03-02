@@ -1,13 +1,6 @@
 package com.napier.groupF;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class App
 {
@@ -18,6 +11,11 @@ public class App
 
         // Connect to database
         a.connect();
+
+        // Get Country
+        Country con = a.getCountry("CAN");
+        // Display results
+        a.displayCountry(con);
 
         // Disconnect from database
         a.disconnect();
@@ -36,15 +34,15 @@ public class App
         try
         {
             // Load Database driver
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         }
         catch (ClassNotFoundException e)
         {
             System.out.println("Could not load SQL driver");
             System.exit(-1);
         }
-
-        int retries = 10;
+        Connection con = null;
+        int retries = 100;
         for (int i = 0; i < retries; ++i)
         {
             System.out.println("Connecting to database...");
@@ -55,6 +53,9 @@ public class App
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
+                // Wait a bit
+                Thread.sleep(10000);
+                // Exit for loop
                 break;
             }
             catch (SQLException sqle)
@@ -87,4 +88,62 @@ public class App
             }
         }
     }
+
+    //get country data using code
+
+    public Country getCountry(String CODE)
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT Code, Name, Continent, Region, Population, Capital "
+                            + "FROM country "
+                            + "WHERE Code = " + CODE;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Return all country details if code is valid
+            // Check one is returned
+            if (rset.next())
+            {
+                Country con = new Country();
+                con.Code = rset.getString("Code");
+                con.Name = rset.getString("Name");
+                con.Continent = rset.getString("Continent");
+                con.Region = rset.getString("Region");
+                con.Population = rset.getInt("Population");
+                con.Capital = rset.getString("Capital");
+                return con;
+            }
+            else
+                return null;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    //Display country data
+
+
+    public void displayCountry(Country con)
+    {
+        if (con != null)
+        {
+            System.out.println(
+                    con.Code + " "
+                            + con.Name + "\n"
+                            + con.Continent + "\n"
+                            + con.Region + "\n"
+                            + con.Population + "\n"
+                            + con.Capital + "\n");
+        }
+    }
+
+
 }

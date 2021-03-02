@@ -108,14 +108,14 @@ public class App
             // Check one is returned
             if (rset.next())
             {
-                Country con = new Country();
-                con.Code = rset.getString("Code");
-                con.Name = rset.getString("Name");
-                con.Continent = rset.getString("Continent");
-                con.Region = rset.getString("Region");
-                con.Population = rset.getInt("Population");
-                con.Capital = rset.getString("Capital");
-                return con;
+                Country country = new Country();
+                country.Code = rset.getString("Code");
+                country.Name = rset.getString("Name");
+                country.Continent = rset.getString("Continent");
+                country.Region = rset.getString("Region");
+                country.Population = rset.getInt("Population");
+                country.Capital = rset.getString("Capital");
+                return country;
             }
             else
                 return null;
@@ -131,17 +131,17 @@ public class App
     //Display country data
 
 
-    public void displayCountry(Country con)
+    public void displayCountry(Country country)
     {
-        if (con != null)
+        if (country != null)
         {
             System.out.println(
-                    con.Code + " "
-                            + con.Name + "\n"
-                            + con.Continent + "\n"
-                            + con.Region + "\n"
-                            + con.Population + "\n"
-                            + con.Capital + "\n");
+                    country.Code + " "
+                            + country.Name + "\n"
+                            + country.Continent + "\n"
+                            + country.Region + "\n"
+                            + country.Population + "\n"
+                            + country.Capital + "\n");
         }
     }
 

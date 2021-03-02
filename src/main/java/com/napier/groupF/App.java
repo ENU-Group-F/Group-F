@@ -13,9 +13,9 @@ public class App
         a.connect();
 
         // Get Country
-        Country con = a.getCountry("CAN");
+        Country country = a.getCountry("CAN");
         // Display results
-        a.displayCountry(con);
+        a.displayCountry(country);
 
         // Disconnect from database
         a.disconnect();

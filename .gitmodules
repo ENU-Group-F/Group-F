@@ -1,0 +1,3 @@
+[submodule "db/world"]
+	path = db/world
+	url = https://github.com/ENU-Group-F/world

@@ -6,8 +6,4 @@ services:
   - docker
 
 after_success:
-  - docker network create --driver bridge group-f
-  - docker pull mongo
-  - docker run -d --name mongo-dbserver --network group-f mongo
-  - docker build -t group-f .
-  - docker run --network group-f group-f
+  - docker-compose up --abort-on-container-exit

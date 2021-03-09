@@ -1,4 +1,4 @@
-# USE CASE: <number> <the name should be the goal as a short active verb phrase>
+# USE CASE: 21 - top populated capital cities in continent
 
 ## CHARACTERISTIC INFORMATION
 
@@ -33,7 +33,7 @@ so I can plan where to open new branches.*
 
 ### Trigger
 
-*A request for continental population data is required by Corporate Planning.*
+*A request for continental top capital population data is required by Corporate Planning.*
 
 ## MAIN SUCCESS SCENARIO
 

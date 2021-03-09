@@ -1,11 +1,11 @@
-# USE CASE: 17  - Capital cities in the world, population in descending order
+# USE CASE: 18  - Capital cities in the continent, population in descending order
 
 ## CHARACTERISTIC INFORMATION
 
 ### Goal in Context
 
-*As a branch manager, I want to produce a report showing me ALL the capital cities in the world
-organised by the largest population to smallest, so I can plan where to open new branches.*
+*As a branch manager, I want to produce a report showing me ALL the capital cities in a 
+continent organised by largest population to smallest, so I can plan where to open new branches.*
 
 ### Scope
 
@@ -17,7 +17,7 @@ organised by the largest population to smallest, so I can plan where to open new
 
 ### Preconditions
 
-*We know the world capital cities. Database contains current world capital cities population data.*
+*We know the capital cities. Database contains current capital continent cities population data.*
 
 ### Success End Condition
 
@@ -33,11 +33,11 @@ organised by the largest population to smallest, so I can plan where to open new
 
 ### Trigger
 
-*A request for list of world capital cities population,in descending order data is required by Corporate Planning.*
+*A request for list of continent capital cities population,in descending order data is required by Corporate Planning.*
 
 ## MAIN SUCCESS SCENARIO
 
-1. Corporate Planning requests population information for all world capital cities.
+1. Corporate Planning requests population information for all continent capital cities.
 2. Branch Manager captures name of the city to get population information for.
 3. Branch Manager extracts current population information for the capital cities.
 4. Branch Manager provides report for Corporate Planning.

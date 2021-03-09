@@ -1,4 +1,4 @@
-# USE CASE: <number> <the name should be the goal as a short active verb phrase>
+# USE CASE: 12 Reporting most populated cities, world
 
 ## CHARACTERISTIC INFORMATION
 
@@ -17,7 +17,7 @@ so I can allocate marketing budgets.*
 
 ### Preconditions
 
-*Number of cities to report is known. Database contains current continental population data.*
+*Number of cities to report is known. Database contains current population data.*
 
 ### Success End Condition
 
@@ -33,13 +33,13 @@ so I can allocate marketing budgets.*
 
 ### Trigger
 
-*A request for population data is required by Head of Marketing.*
+*A request for most populated cities data is required by Head of Marketing.*
 
 ## MAIN SUCCESS SCENARIO
 
-1. Head of Marketing requests population information for a number of the most populated cities in the world.
-2. Marketing Manager captures number of cities to get population information for.
-3. Marketing Manager extracts current population for the required number of cities.
+1. Head of Marketing requests information on a number of the most populated cities in the world.
+2. Marketing Manager captures number of cities to get  information for.
+3. Marketing Manager extracts report of the required number of cities.
 4. Marketing Manager provides report for Head of Marketing.
 
 ## EXTENSIONS

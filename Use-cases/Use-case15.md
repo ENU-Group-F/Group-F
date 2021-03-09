@@ -1,11 +1,10 @@
-# USE CASE: 13 Reporting the most populated cities, continent
+# USE CASE: 15 Reporting the most populated cities, country
 
 ## CHARACTERISTIC INFORMATION
 
 ### Goal in Context
 
-*As a marketing manager I want to produce a report showing me the top most populated cities in a continent,
-so I can allocate marketing budgets.*
+*As a marketing manager, I need to produce a report showing the top most populated cities in a country, so I can allocate marketing budgets.*
 
 ### Scope
 
@@ -17,7 +16,7 @@ so I can allocate marketing budgets.*
 
 ### Preconditions
 
-*Continent is known. Number of cities to report is known. Database contains current population data.*
+*Country is known. Number of cities to report is known. Database contains current population data.*
 
 ### Success End Condition
 
@@ -45,7 +44,7 @@ so I can allocate marketing budgets.*
 ## EXTENSIONS
 
 3. **Country does not exist**
-    1.Branch Manager informs Head of Marketing that country is incorrect.
+   1.Branch Manager informs Head of Marketing that country is incorrect.
 
 ## SUB-VARIATIONS
 

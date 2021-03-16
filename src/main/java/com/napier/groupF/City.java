@@ -1,12 +1,9 @@
 package com.napier.groupF;
 
 public class City {
-    // city name
+//    int ID;
     String Name;
-    // country code
     String CountryCode;
-    //district name
     String District;
-    // population value
     int Population;
 }

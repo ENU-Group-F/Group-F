@@ -18,11 +18,11 @@ import java.util.ArrayList;
 
             // Connect to database
             a.connect("localhost:33060");
-            // Get city
-//        City c = a.getCity("London");
+            //Get country
+        Country c = a.getCountry("France");
             ArrayList<Country> countries = a.listCountires("Europe");
             // Display results
-//        a.displayCity(c);
+        a.displayCountry(c);
             a.displayCountries(countries);
             // Disconnect from database
             a.disconnect();
@@ -65,6 +65,35 @@ import java.util.ArrayList;
                 } catch (InterruptedException ie) {
                     System.out.println("Thread interrupted? Should not happen.");
                 }
+            }
+        }
+
+        public Country getCountry(String name) {
+        try {
+           // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+
+            String strSelect = "SELECT  Name, Code, Region, Population " +
+                    "FROM country " +
+                    "WHERE Name = '" + name + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Return country if valid
+            //Check one is returned
+            if (rset.next()) {
+                Country c = new Country();
+                c.Name = rset.getString("Name");
+                c.Code = rset.getString("Code");
+                c.Region = rset.getString("Region");
+                c.Population = rset.getInt("Population");
+                return c;
+            } else
+                return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Country details");
+            return null;
             }
         }
 
@@ -116,7 +145,14 @@ import java.util.ArrayList;
                 System.out.println(country_string);
             }
         }
-
+        public void displayCountry(Country c) {
+        if (c != null) {
+           System.out.println("Name: " + c.Name + "\n" +
+                    "Country: " + c.Code + "\n" +
+                    "Region: " + c.Region + "\n" +
+                    "Population: " + c.Population);
+            }
+        }
 
 
         /**

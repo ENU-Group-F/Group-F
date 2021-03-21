@@ -21,6 +21,10 @@ import java.util.ArrayList;
             //Get country
             Country c = a.getCountry("France");
             ArrayList<Country> countries = a.listCountires("Europe");
+        Country c = a.getCountry("France");
+            //Get Capital
+            Capital ca = a.getCapital("France");
+            ArrayList<Country> countries = a.listCountries("Europe");
             // Display results
             a.displayCountry(c);
             a.displayCountries(countries);
@@ -102,7 +106,7 @@ import java.util.ArrayList;
         }
 
 
-        public ArrayList<Country> listCountires(String continent) {
+        public ArrayList<Country> listCountries(String continent) {
             try {
                 // Create an SQL statement
                 Statement stmt = con.createStatement();
@@ -207,6 +211,34 @@ import java.util.ArrayList;
                         "District: " + c.District + "\n" +
                         "Population: " + c.Population);
                 System.out.println(city_string);
+            }
+        }
+
+        public Capital getCapital(String name) {
+            try {
+                // Create an SQL statement
+                Statement stmt = con.createStatement();
+                // Create string for SQL statement
+
+                String strSelect = "SELECT  Name, Capital, city.Population " +
+                        "FROM country  JOIN city ON country.Code = city.CountryCode" +
+                        "WHERE Name = '" + name + "'";
+                // Execute SQL statement
+                ResultSet rset = stmt.executeQuery(strSelect);
+                //Return country if valid
+                //Check one is returned
+                if (rset.next()) {
+                    Capital c = new Capital();
+                    c.Name = rset.getString("Country");
+                    c.Country = rset.getString("Name");
+                    c.Population = rset.getInt("city.Population");
+                    return c;
+                } else
+                    return null;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Failed to get Capital details");
+                return null;
             }
         }
 

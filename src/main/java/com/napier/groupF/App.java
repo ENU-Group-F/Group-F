@@ -19,11 +19,15 @@ import java.util.ArrayList;
             // Connect to database
             a.connect("localhost:33060");
             //Get country
-        Country c = a.getCountry("France");
+            Country c = a.getCountry("France");
             ArrayList<Country> countries = a.listCountires("Europe");
             // Display results
-        a.displayCountry(c);
+            a.displayCountry(c);
             a.displayCountries(countries);
+            // get cities
+            ArrayList<City> cities = a.listCities("Europe");
+            // Display results
+            a.displayCities(cities);
             // Disconnect from database
             a.disconnect();
         }
@@ -151,6 +155,58 @@ import java.util.ArrayList;
                     "Country: " + c.Code + "\n" +
                     "Region: " + c.Region + "\n" +
                     "Population: " + c.Population);
+            }
+        }
+
+        public ArrayList<City> listCities(String continent) {
+            try {
+                // Create an SQL statement
+                Statement stmt = con.createStatement();
+                // Create string for SQL statement
+                String strSelect =
+                        "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                                "FROM city JOIN country ON city.CountryCode = country.Code " +
+                                "WHERE country.Continent = '" + continent + "'";
+                // Execute SQL statement
+                ResultSet rset = stmt.executeQuery(strSelect);
+                // Extract city information
+                ArrayList<City> cities = new ArrayList<City>();
+                while (rset.next()) {
+                    City c = new City();
+                    c.Name = rset.getString("city.Name");
+                    c.CountryCode = rset.getString("city.CountryCode");
+                    c.District = rset.getString("city.District");
+                    c.Population = rset.getInt("city.Population");
+                    cities.add(c);
+                }
+                return cities;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Failed to get city details");
+                return null;
+
+            }
+        }
+
+
+        public void displayCities(ArrayList<City> cities)
+        {
+            // Check cities is not null
+            if (cities == null)
+            {
+                System.out.println("No cities");
+                return;
+            }
+            // Print header
+            System.out.println("Cities List");
+            // Loop over all cities in the list
+            for (City c : cities)
+            {
+                String city_string = ("Name: " + c.Name + "\n" +
+                        "Country: " + c.CountryCode + "\n" +
+                        "District: " + c.District + "\n" +
+                        "Population: " + c.Population);
+                System.out.println(city_string);
             }
         }
 

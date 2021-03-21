@@ -28,5 +28,12 @@ import static org.junit.jupiter.api.Assertions.*;
             ArrayList<Country> countries= new ArrayList<Country>();
             app.displayCountries(countries);
         }
+
+        @Test
+        void displayCitiesTestNull()
+        {
+            app.displayCities(null);
+        }
+
     }
 

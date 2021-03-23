@@ -17,7 +17,6 @@ public class App {
         // Create new Application
         com.napier.groupF.App a = new com.napier.groupF.App();
         // Connect to database
-
         a.connect("localhost:33060");
         //Get country
         Country c = a.getCountry("France");
@@ -30,7 +29,6 @@ public class App {
         // get cities
         ArrayList<City> cities = a.listCities("Europe");
         // Display results
-
         a.displayCities(cities);
         // Disconnect from database
         a.disconnect();
@@ -156,15 +154,12 @@ public class App {
         }
     }
 
-
     public ArrayList<City> listCities(String continent) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
-
-            String strSelect =
-                    "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
                             "FROM city JOIN country ON city.CountryCode = country.Code " +
                             "WHERE country.Continent = '" + continent + "'";
             // Execute SQL statement
@@ -184,7 +179,6 @@ public class App {
             System.out.println(e.getMessage());
             System.out.println("Failed to get city details");
             return null;
-
         }
     }
 
@@ -196,10 +190,8 @@ public class App {
         }
         // Print header
         System.out.println("Cities List");
-        // Loop over all cities in the list
-
-        for (City c : cities)
-        {
+        // Loop through all cities in the list
+        for (City c : cities) {
             String city_string = ("Name: " + c.Name + "\n" +
                     "Country: " + c.CountryCode + "\n" +
                     "District: " + c.District + "\n" +
@@ -207,7 +199,6 @@ public class App {
             System.out.println(city_string);
         }
     }
-
 
     public Capital getCapital(String name) {
         try {
@@ -221,13 +212,15 @@ public class App {
             ResultSet rset = stmt.executeQuery(strSelect);
             //Return country if valid
             //Check one is returned
-            if (rset.next()) {
+            if (rset.next())
+            {
                 Capital c = new Capital();
                 c.Name = rset.getString("Country");
                 c.Country = rset.getString("Name");
                 c.Population = rset.getInt("city.Population");
                 return c;
-            } else
+            }
+            else
                 return null;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -235,7 +228,6 @@ public class App {
             return null;
         }
     }
-
 
     /**
      * Disconnect from the MySQL database.

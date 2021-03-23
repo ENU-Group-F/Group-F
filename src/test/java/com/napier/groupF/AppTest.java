@@ -27,6 +27,7 @@ public class AppTest {
     }
 
     @Test
+    // test if cities is Null
     void displayCitiesTestNull() {
         app.displayCities(null);
     }

@@ -57,11 +57,11 @@ import java.util.ArrayList;
                     // Wait a bit for db to start
                     Thread.sleep(30000);
                     //Connect to database locally
-                    con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+                    //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
 
                     // Connect to database inside docker
 
-                    //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+                    con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                     System.out.println("Successfully connected");
                     break;
                 } catch (SQLException sqle) {

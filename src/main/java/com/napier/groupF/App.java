@@ -12,17 +12,25 @@ import java.util.ArrayList;
 //import java.util.ArrayList;
 
 public class App {
+
     public static void main(String[] args) {
         // Create new Application
-        App a = new App();
-
+        com.napier.groupF.App a = new com.napier.groupF.App();
         // Connect to database
-        a.connect();
-        // Get city
-//        City c = a.getCity("London");
+
+        a.connect("localhost:33060");
+        //Get country
+        Country c = a.getCountry("France");
+        ArrayList<Country> countries = a.listCountries("Europe");
+        //Get Capital
+        Capital ca = a.getCapital("France");
+        // Display results
+        a.displayCountry(c);
+        a.displayCountries(countries);
+        // get cities
         ArrayList<City> cities = a.listCities("Europe");
         // Display results
-//        a.displayCity(c);
+
         a.displayCities(cities);
         // Disconnect from database
         a.disconnect();
@@ -31,12 +39,12 @@ public class App {
     /**
      * Connection to MySQL database.
      */
-    private Connection con = null;
 
+    private Connection con = null;
     /**
      * Connect to the MySQL database.
      */
-    public void connect() {
+    public void connect(String location) {
         try {
             // Load Database driver
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -44,19 +52,16 @@ public class App {
             System.out.println("Could not load SQL driver");
             System.exit(-1);
         }
-
         int retries = 10;
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
             try {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
-                // Connect to database locally
-//                con = DriverManager.getConnection("jdbc:mysql://localhost:33060/world?useSSL=true", "root", "example");
-
+                //Connect to database locally
+                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=true", "root", "example");
-
+                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             } catch (SQLException sqle) {
@@ -68,41 +73,96 @@ public class App {
         }
     }
 
-//    public City getCity(String name) {
-//        try {
-//            // Create an SQL statement
-//            Statement stmt = con.createStatement();
-//            // Create string for SQL statement
-//
-//            String strSelect = "SELECT ID, Name, CountryCode, District, Population " +
-//                    "FROM city " +
-//                    "WHERE Name = '" + name + "'";
-//            // Execute SQL statement
-//            ResultSet rset = stmt.executeQuery(strSelect);
-//            //Return city if valid
-//            //Check one is returned
-//            if (rset.next()) {
-//                City c = new City();
-////                c.ID = rset.getInt("ID");
-//                c.Name = rset.getString("Name");
-//                c.CountryCode = rset.getString("CountryCode");
-//                c.District = rset.getString("District");
-//                c.Population = rset.getInt("Population");
-//                return c;
-//            } else
-//                return null;
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            System.out.println("Failed to get City details");
-//            return null;
-//            }
-//        }
+    public Country getCountry(String name) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT  Name, Code, Region, Population " +
+                    "FROM country " +
+                    "WHERE Name = '" + name + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Return country if valid
+            //Check one is returned
+            if (rset.next()) {
+                Country c = new Country();
+                c.Name = rset.getString("Name");
+                c.Code = rset.getString("Code");
+                c.Region = rset.getString("Region");
+                c.Population = rset.getInt("Population");
+                return c;
+            } else
+                return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Country details");
+            return null;
+        }
+    }
+
+    public ArrayList<Country> listCountries(String continent) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                            "FROM country " +
+                            "WHERE country.Continent = '" + continent + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    public void displayCountries(ArrayList<Country> countries) {
+        // Check cities is not null
+        if (countries == null) {
+            System.out.println("No countries");
+            return;
+        }
+        // Print header
+        System.out.println("Countries List");
+        // Loop over all cities in the list
+        for (Country co : countries) {
+            String country_string = ("Name: " + co.Name + "\n" +
+                    "Code: " + co.Code + "\n" +
+                    "Region: " + co.Region + "\n" +
+                    "Population: " + co.Population);
+            System.out.println(country_string);
+        }
+    }
+
+    public void displayCountry(Country c) {
+        if (c != null) {
+            System.out.println("Name: " + c.Name + "\n" +
+                    "Country: " + c.Code + "\n" +
+                    "Region: " + c.Region + "\n" +
+                    "Population: " + c.Population);
+        }
+    }
+
 
     public ArrayList<City> listCities(String continent) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
+
             String strSelect =
                     "SELECT city.Name, city.CountryCode, city.District, city.Population " +
                             "FROM city JOIN country ON city.CountryCode = country.Code " +
@@ -128,17 +188,16 @@ public class App {
         }
     }
 
-    public void displayCities(ArrayList<City> cities)
-    {
+    public void displayCities(ArrayList<City> cities) {
         // Check cities is not null
-        if (cities == null)
-        {
+        if (cities == null) {
             System.out.println("No cities");
             return;
         }
         // Print header
         System.out.println("Cities List");
         // Loop over all cities in the list
+
         for (City c : cities)
         {
             String city_string = ("Name: " + c.Name + "\n" +
@@ -149,15 +208,34 @@ public class App {
         }
     }
 
-//        public void displayCity(City c) {
-//        if (c != null) {
-//            System.out.println("ID: "+ c.ID + "\n" +
-//                    "Name: " + c.Name + "\n" +
-//                    "Country: " + c.CountryCode + "\n" +
-//                    "District: " + c.District + "\n" +
-//                    "Population: " + c.Population);
-//            }
-//        }
+
+    public Capital getCapital(String name) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT  Name, Capital, city.Population " +
+                    "FROM country  JOIN city ON country.Code = city.CountryCode" +
+                    "WHERE Name = '" + name + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Return country if valid
+            //Check one is returned
+            if (rset.next()) {
+                Capital c = new Capital();
+                c.Name = rset.getString("Country");
+                c.Country = rset.getString("Name");
+                c.Population = rset.getInt("city.Population");
+                return c;
+            } else
+                return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Capital details");
+            return null;
+        }
+    }
+
 
     /**
      * Disconnect from the MySQL database.

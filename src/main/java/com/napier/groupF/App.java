@@ -190,7 +190,7 @@ public class App {
         }
         // Print header
         System.out.println("Cities List");
-        // Loop over all cities in the list
+        // Loop through all cities in the list
         for (City c : cities) {
             String city_string = ("Name: " + c.Name + "\n" +
                     "Country: " + c.CountryCode + "\n" +
@@ -212,13 +212,15 @@ public class App {
             ResultSet rset = stmt.executeQuery(strSelect);
             //Return country if valid
             //Check one is returned
-            if (rset.next()) {
+            if (rset.next())
+            {
                 Capital c = new Capital();
                 c.Name = rset.getString("Country");
                 c.Country = rset.getString("Name");
                 c.Population = rset.getInt("city.Population");
                 return c;
-            } else
+            }
+            else
                 return null;
         } catch (Exception e) {
             System.out.println(e.getMessage());

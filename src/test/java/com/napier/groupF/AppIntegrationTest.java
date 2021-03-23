@@ -28,4 +28,10 @@ public class AppIntegrationTest
         assertEquals(c.Region, "Western Europe");
         assertEquals(c.Population, 59225700);
     }
+
+    @Test
+    void testGetCity()
+    {
+        //insert test method
+    }
 }

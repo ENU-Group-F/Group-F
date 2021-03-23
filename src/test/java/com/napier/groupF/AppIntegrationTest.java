@@ -28,4 +28,13 @@ public class AppIntegrationTest
         assertEquals(c.Region, "Western Europe");
         assertEquals(c.Population, 59225700);
     }
+
+    @Test
+    void testGetCapital()
+    {
+        Capital ca = app.getCapital("Spain");
+        assertEquals(ca.CityName, 653);
+        assertEquals(ca.Population, 2879052);
+        assertEquals(ca.Country, "Spain");
+    }
 }

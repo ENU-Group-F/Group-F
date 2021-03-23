@@ -10,7 +10,7 @@ public class Capital
 {
 
     //Capital name
-    public String Name;
+    public int CityName;
 
     //country capital is in
     public String Country;

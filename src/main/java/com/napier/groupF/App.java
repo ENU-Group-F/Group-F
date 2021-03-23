@@ -19,12 +19,15 @@ import java.util.ArrayList;
             // Connect to database
             a.connect("localhost:33060");
             //Get country
-        Country c = a.getCountry("France");
+            Country c = a.getCountry("France");
             //Get Capital
-            Capital ca = a.getCapital("France");
+            Capital ca = a.getCapital("Spain");
+            //Get list of countries
             ArrayList<Country> countries = a.listCountries("Europe");
             // Display results
-        a.displayCountry(c);
+            //country
+             a.displayCountry(c);
+             //list of countries
             a.displayCountries(countries);
             // Disconnect from database
             a.disconnect();
@@ -54,11 +57,11 @@ import java.util.ArrayList;
                     // Wait a bit for db to start
                     Thread.sleep(30000);
                     //Connect to database locally
-                    //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+                    con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
 
                     // Connect to database inside docker
 
-                    con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+                    //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                     System.out.println("Successfully connected");
                     break;
                 } catch (SQLException sqle) {
@@ -156,25 +159,25 @@ import java.util.ArrayList;
             }
         }
 
-        public Capital getCapital(String name) {
+        public Capital getCapital(String countryName) {
             try {
                 // Create an SQL statement
                 Statement stmt = con.createStatement();
                 // Create string for SQL statement
 
-                String strSelect = "SELECT  Name, Capital, city.Population " +
-                        "FROM country  JOIN city ON country.Code = city.CountryCode" +
-                        "WHERE Name = '" + name + "'";
+                String strSelect = "SELECT  country.Name, country.Capital, city.Population " +
+                        "FROM country  JOIN city ON country.Capital = city.ID" +
+                        "WHERE country.Name = '" + countryName + "'";
                 // Execute SQL statement
                 ResultSet rset = stmt.executeQuery(strSelect);
                 //Return country if valid
                 //Check one is returned
                 if (rset.next()) {
-                    Capital c = new Capital();
-                    c.Name = rset.getString("Country");
-                    c.Country = rset.getString("Name");
-                    c.Population = rset.getInt("city.Population");
-                    return c;
+                    Capital ca = new Capital();
+                    ca.CityName = rset.getInt("country.Capital");
+                    ca.Country = rset.getString("country.Name");
+                    //ca.Population = rset.getInt("city.Population");
+                    return ca;
                 } else
                     return null;
             } catch (Exception e) {

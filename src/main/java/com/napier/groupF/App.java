@@ -19,18 +19,26 @@ public class App {
         // Connect to database
         a.connect("localhost:33060");
         // the following statements are to test the queries and should later be replaced with user input
-        //Get country
-        Country c = a.getCountry("France");
-        ArrayList<Country> countries = a.listCountries("Europe");
-        //Get Capital
-        Capital ca = a.getCapital("France");
-        // Display results
-        a.displayCountry(c);
-        a.displayCountries(countries);
-        // get cities
-        ArrayList<City> cities = a.listCities("Europe");
-        // Display results
-        a.displayCities(cities);
+//        //Get country
+//        Country c = a.getCountry("France");
+//        ArrayList<Country> countries = a.listCountries("Europe");
+//        //Get Capital
+//        Capital ca = a.getCapital("France");
+//        // Display results
+//        a.displayCountry(c);
+//        a.displayCountries(countries);
+//        // get cities
+//        ArrayList<City> cities = a.listCities("Europe");
+//        // Display results
+//        a.displayCities(cities);
+        // Get top cities
+//        ArrayList<City> topCities = a.topCitiesWorld(10);
+//        ArrayList<City> topCities = a.topCitiesContinent(10, "Europe");
+//        ArrayList<City> topCities = a.topCitiesRegion(10, "Southern Europe");
+//        ArrayList<City> topCities = a.topCitiesCountry(10, "United Kingdom");
+        ArrayList<City> topCities = a.topCitiesDistrict(10, "England");
+        // Display Results
+        a.displayCities(topCities);
         // Disconnect from database
         a.disconnect();
     }
@@ -163,6 +171,155 @@ public class App {
             String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
                             "FROM city JOIN country ON city.CountryCode = country.Code " +
                             "WHERE country.Continent = '" + continent + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    public ArrayList<City> topCitiesWorld(Integer topX) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "ORDER BY city.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    public ArrayList<City> topCitiesContinent(Integer topX, String continent) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY city.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    public ArrayList<City> topCitiesRegion(Integer topX, String region) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE country.Region = '" + region + "'" +
+                    "ORDER BY city.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    public ArrayList<City> topCitiesCountry(Integer topX, String country) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE country.Name = '" + country + "'" +
+                    "ORDER BY city.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    public ArrayList<City> topCitiesDistrict(Integer topX, String district) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE city.District = '" + district + "'" +
+                    "ORDER BY city.Population DESC " +
+                    "LIMIT " + topX;
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract city information

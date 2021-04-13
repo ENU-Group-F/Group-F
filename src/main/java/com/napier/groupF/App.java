@@ -18,6 +18,7 @@ public class App {
         com.napier.groupF.App a = new com.napier.groupF.App();
         // Connect to database
         a.connect("localhost:33060");
+        // the following statements are to test the queries and should later be replaced with user input
         //Get country
         Country c = a.getCountry("France");
         ArrayList<Country> countries = a.listCountries("Europe");

@@ -66,7 +66,7 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 //Connect to database locally
-                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+//                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
                 con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
@@ -80,6 +80,11 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public Country getCountry(String name) {
         try {
             // Create an SQL statement
@@ -108,6 +113,44 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public City getCity(String name) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT  Name, CountryCode, District, Population " +
+                    "FROM city " +
+                    "WHERE Name = '" + name + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            //Return country if valid
+            //Check one is returned
+            if (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("Name");
+                c.CountryCode = rset.getString("CountryCode");
+                c.District = rset.getString("District");
+                c.Population = rset.getInt("Population");
+                return c;
+            } else
+                return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get City details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param continent
+     * @return
+     */
     public ArrayList<Country> listCountries(String continent) {
         try {
             // Create an SQL statement
@@ -136,6 +179,10 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param countries
+     */
     public void displayCountries(ArrayList<Country> countries) {
         // Check cities is not null
         if (countries == null) {
@@ -154,6 +201,10 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param c
+     */
     public void displayCountry(Country c) {
         if (c != null) {
             System.out.println("Name: " + c.Name + "\n" +
@@ -163,6 +214,11 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param continent
+     * @return
+     */
     public ArrayList<City> listCities(String continent) {
         try {
             // Create an SQL statement
@@ -191,6 +247,11 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param topX
+     * @return
+     */
     public ArrayList<City> topCitiesWorld(Integer topX) {
         try {
             // Create an SQL statement
@@ -220,6 +281,12 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param topX
+     * @param continent
+     * @return
+     */
     public ArrayList<City> topCitiesContinent(Integer topX, String continent) {
         try {
             // Create an SQL statement
@@ -250,6 +317,12 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param topX
+     * @param region
+     * @return
+     */
     public ArrayList<City> topCitiesRegion(Integer topX, String region) {
         try {
             // Create an SQL statement
@@ -280,6 +353,12 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param topX
+     * @param country
+     * @return
+     */
     public ArrayList<City> topCitiesCountry(Integer topX, String country) {
         try {
             // Create an SQL statement
@@ -310,6 +389,12 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param topX
+     * @param district
+     * @return
+     */
     public ArrayList<City> topCitiesDistrict(Integer topX, String district) {
         try {
             // Create an SQL statement
@@ -340,6 +425,10 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param cities
+     */
     public void displayCities(ArrayList<City> cities) {
         // Check cities is not null
         if (cities == null) {
@@ -358,6 +447,11 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public Capital getCapital(String name) {
         try {
             // Create an SQL statement

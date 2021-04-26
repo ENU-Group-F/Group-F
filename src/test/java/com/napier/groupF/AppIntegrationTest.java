@@ -32,6 +32,10 @@ public class AppIntegrationTest
     @Test
     void testGetCity()
     {
-        //insert test method
+        City c = app.getCity("Edinburgh");
+        assertEquals(c.Name, "Edinburgh");
+        assertEquals(c.CountryCode, "GBR");
+        assertEquals(c.District, "Scotland");
+        assertEquals(c.Population, 450180);
     }
 }

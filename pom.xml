@@ -6,7 +6,7 @@
 
     <groupId>com.napier.groupf</groupId>
     <artifactId>group-f</artifactId>
-    <version>0.1.0.2</version>
+    <version>1.0</version>
 
 
     <dependencies>

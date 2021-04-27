@@ -22,7 +22,7 @@ public class App {
         Country c = a.getCountry("France");
         ArrayList<Country> countries = a.listCountries("Europe");
         //Get Capital
-//        Capital ca = a.getCapital("France");
+        Capital ca = a.getCapital("France");
         // Display results
         a.displayCountry(c);
         a.displayCountries(countries);

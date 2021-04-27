@@ -10,7 +10,7 @@ services:
   - docker
 
 install:
-  - docker build -t database db/.
+  - docker build -t database world/.
   - docker run --rm -d -e MYSQL_ROOT_PASSWORD=example -p 33060:3306 database
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
@@ -44,7 +44,7 @@ jobs:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         # Copy built JAR file.  JAR built in $TRAVIS_BUILD_DIR/
-        file: $TRAVIS_BUILD_DIR/target/group-f.jar
+        file: $TRAVIS_BUILD_DIR/target/groupF.jar
         skip_cleanup: true
 
 stages:

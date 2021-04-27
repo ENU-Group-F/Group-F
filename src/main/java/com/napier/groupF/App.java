@@ -9,7 +9,6 @@ import java.sql.SQLException;
 //import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-//import java.util.ArrayList;
 
 public class App {
 
@@ -19,26 +18,26 @@ public class App {
         // Connect to database
         a.connect("localhost:33060");
         // the following statements are to test the queries and should later be replaced with user input
-//        //Get country
-//        Country c = a.getCountry("France");
-//        ArrayList<Country> countries = a.listCountries("Europe");
-//        //Get Capital
-//        Capital ca = a.getCapital("France");
-//        // Display results
-//        a.displayCountry(c);
-//        a.displayCountries(countries);
-//        // get cities
-//        ArrayList<City> cities = a.listCities("Europe");
-//        // Display results
-//        a.displayCities(cities);
+        //Get country
+        Country c = a.getCountry("France");
+        ArrayList<Country> countries = a.listCountries("Europe");
+        //Get Capital
+        Capital ca = a.getCapital("France");
+        // Display results
+        a.displayCountry(c);
+        a.displayCountries(countries);
+        // get cities
+        ArrayList<City> cities = a.listCities("Europe");
+        // Display results
+        a.displayCities(cities);
         // Get top cities
-//        ArrayList<City> topCities = a.topCitiesWorld(10);
-//        ArrayList<City> topCities = a.topCitiesContinent(10, "Europe");
-//        ArrayList<City> topCities = a.topCitiesRegion(10, "Southern Europe");
-//        ArrayList<City> topCities = a.topCitiesCountry(10, "United Kingdom");
-        ArrayList<City> topCities = a.topCitiesDistrict(10, "England");
+        ArrayList<City> topCitiesWorld = a.topCitiesWorld(10);
+        ArrayList<City> topCitiesContinent = a.topCitiesContinent(10, "Europe");
+        ArrayList<City> topCitiesRegion = a.topCitiesRegion(10, "Southern Europe");
+        ArrayList<City> topCitiesCountry = a.topCitiesCountry(10, "United Kingdom");
+        ArrayList<City> topCitiesDistrict = a.topCitiesDistrict(10, "England");
         // Display Results
-        a.displayCities(topCities);
+        a.displayCities(topCitiesContinent);
         // Disconnect from database
         a.disconnect();
     }
@@ -192,12 +191,17 @@ public class App {
         // Print header
         System.out.println("Countries List");
         // Loop over all cities in the list
-        for (Country co : countries) {
-            String country_string = ("Name: " + co.Name + "\n" +
-                    "Code: " + co.Code + "\n" +
-                    "Region: " + co.Region + "\n" +
-                    "Population: " + co.Population);
-            System.out.println(country_string);
+//        for (Country co : countries) {
+//            String country_string = ("Name: " + co.Name + "\n" +
+//                    "Code: " + co.Code + "\n" +
+//                    "Region: " + co.Region + "\n" +
+//                    "Population: " + co.Population);
+//            System.out.println(country_string);
+            //        Print a comma separated list of the cities
+            System.out.println("Name,Code,Region,Population");
+            for (Country co : countries){
+                String country_string = co.Name + "," + co.Code + "," + co.Region + "," + co.Population;
+                System.out.println(country_string);
         }
     }
 
@@ -437,13 +441,19 @@ public class App {
         }
         // Print header
         System.out.println("Cities List");
-        // Loop through all cities in the list
-        for (City c : cities) {
-            String city_string = ("Name: " + c.Name + "\n" +
-                    "Country: " + c.CountryCode + "\n" +
-                    "District: " + c.District + "\n" +
-                    "Population: " + c.Population);
+        // Print a list of the cities
+//        for (City c : cities) {
+//            String city_string = ("Name: " + c.Name + "\n" +
+//                    "Country: " + c.CountryCode + "\n" +
+//                    "District: " + c.District + "\n" +
+//                    "Population: " + c.Population);
+//            System.out.println(city_string);
+//        Print a comma separated list of the cities
+        System.out.println("Name,Country,District,Population");
+        for (City c : cities){
+            String city_string = c.Name + "," + c.CountryCode + "," + c.District + "," + c.Population;
             System.out.println(city_string);
+
         }
     }
 

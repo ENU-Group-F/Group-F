@@ -43,7 +43,9 @@ public class AppTest {
     }
 
     @Test
-    // test return if topCitiesContinent is given an invalid continent
+    /**
+     * test return if topCitiesContinent is given an invalid continent
+     */
     void topCitiesContinentInvalid(){
         app.topCitiesContinent(10, "Europa");
     }

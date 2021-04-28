@@ -21,11 +21,14 @@ public class App {
         //Get country
         Country c = a.getCountry("France");
         ArrayList<Country> countries = a.listCountries("Europe");
+        //Get top Countries
+        ArrayList<Country> topCountriesWorld = a.topCountriesWorld();
         //Get Capital
-        Capital ca = a.getCapital("France");
+        ArrayList<Capital> ca = a.getCapital("France");
         // Display results
+        a.displayCapitals(ca);
         a.displayCountry(c);
-        a.displayCountries(countries);
+        a.displayCountries(topCountriesWorld);
         // get cities
         ArrayList<City> cities = a.listCities("Europe");
         // Display results
@@ -65,9 +68,9 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 //Connect to database locally
-//                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
-                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             } catch (SQLException sqle) {
@@ -161,6 +164,40 @@ public class App {
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param topX
+     * @return
+     */
+    public ArrayList<Country> topCountriesWorld(){//(Integer topX) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "ORDER BY country.Population DESC "
+                   ;// "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
             ArrayList<Country> countries = new ArrayList<Country>();
             while (rset.next()) {
                 Country co = new Country();
@@ -459,35 +496,52 @@ public class App {
 
     /**
      *
-     * @param name
+     * @param country
      * @return
+     *
      */
-    public Capital getCapital(String name) {
+    public ArrayList<Capital> getCapital(String country) {
         try {
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Create string for SQL statement
-            String strSelect = "SELECT  Name, Capital, city.Population " +
-                    "FROM country  JOIN city ON country.Code = city.CountryCode" +
-                    "WHERE Name = '" + name + "'";
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
-            //Return country if valid
-            //Check one is returned
-            if (rset.next())
-            {
-                Capital c = new Capital();
-                c.Name = rset.getString("Country");
-                c.Country = rset.getString("Name");
-                c.Population = rset.getInt("city.Population");
-                return c;
-            }
-            else
-                return null;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to get Capital details");
-            return null;
+              // Create an SQL statement
+              Statement stmt = con.createStatement();
+             // Create string for SQL statement
+              String strSelect = "SELECT capital.Name, capital.Country, capital.Population " +
+                     "FROM capital JOIN country ON city.CountryCode = country.Code " +
+                      "WHERE country.Continent = '" + country + "'";
+              // Execute SQL statement
+             ResultSet rset = stmt.executeQuery(strSelect);
+              // Extract city information
+             ArrayList<Capital> capitals = new ArrayList<Capital>();
+              while (rset.next()) {
+                  Capital ca = new Capital();
+                  ca.Name = rset.getString("country.Name");
+                  ca.Country = rset.getString("country.CountryCode");
+                  ca.Population = rset.getInt("capital.Population");
+                  capitals.add(ca);
+              }
+             return capitals;
+          } catch (Exception e) {
+              System.out.println(e.getMessage());
+              System.out.println("Failed to get capital details");
+              return null;
+         }
+    }
+
+    public void displayCapitals(ArrayList<Capital> capitals) {
+        // Check capitals is not null
+        if (capitals == null) {
+            System.out.println("No capitals");
+            return;
+        }
+        // Print header
+        System.out.println("Capitals List");
+
+//        Print a comma separated list of the cities
+        System.out.println("Name,Country,Population");
+        for (Capital ca : capitals){
+            String capital_string = ca.Name + "," + ca.Country +  "," + ca.Population;
+            System.out.println(capital_string);
+
         }
     }
 

@@ -24,9 +24,13 @@ public class App {
         //Get top Countries
         ArrayList<Country> topCountriesWorld = a.topCountriesWorld();
         //Get Capital
-        ArrayList<Capital> ca = a.getWorldCapital();
+        ArrayList<Capital> WorldCapitals = a.getWorldCapital();
+        ArrayList<Capital> ContinentCapitals = a.getContinentCapital("Europe");
+        ArrayList<Capital> RegionCapitals = a.getRegionCapital("Southern Europe");
         // Display results
-        a.displayCapitals(ca);
+       // a.displayCapitals(WorldCapitals);
+       // a.displayCapitals(ContinentCapitals);
+        a.displayCapitals(RegionCapitals);
         a.displayCountry(c);
         a.displayCountries(topCountriesWorld);
         // get cities
@@ -68,7 +72,7 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 //Connect to database locally
-               // con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
                 con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
@@ -498,7 +502,7 @@ public class App {
      *
      * @param
      * @return
-     *
+     *Get Capital Cities of the world by population
      */
     public ArrayList<Capital> getWorldCapital() {
         try {
@@ -528,6 +532,72 @@ public class App {
          }
     }
 
+    /**
+     *
+     * @param continent
+     * @return
+     */
+
+    public ArrayList<Capital> getContinentCapital(String continent) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, country.Name, city.Population " +
+                    "FROM city JOIN country ON city.ID = country.Capital " +
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY city.Population DESC " ;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Capital> capitals = new ArrayList<Capital>();
+            while (rset.next()) {
+                Capital cap = new Capital();
+                cap.Name = rset.getString("city.Name");
+                cap.Country = rset.getString("country.Name");
+                cap.Population = rset.getInt("city.Population");
+                capitals.add(cap);
+            }
+            return capitals;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param region
+     * @return
+     */
+    public ArrayList<Capital> getRegionCapital(String region) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, country.Name, city.Population " +
+                    "FROM city JOIN country ON city.ID = country.Capital " +
+                    "WHERE country.Region = '" + region + "'" +
+                    "ORDER BY city.Population DESC " ;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Capital> capitals = new ArrayList<Capital>();
+            while (rset.next()) {
+                Capital cap = new Capital();
+                cap.Name = rset.getString("city.Name");
+                cap.Country = rset.getString("country.Name");
+                cap.Population = rset.getInt("city.Population");
+                capitals.add(cap);
+            }
+            return capitals;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital details");
+            return null;
+        }
+    }
     public void displayCapitals(ArrayList<Capital> capitals) {
         // Check capitals is not null
         if (capitals == null) {

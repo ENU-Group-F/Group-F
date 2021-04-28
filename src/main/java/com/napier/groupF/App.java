@@ -24,7 +24,7 @@ public class App {
         //Get top Countries
         ArrayList<Country> topCountriesWorld = a.topCountriesWorld();
         //Get Capital
-        ArrayList<Capital> ca = a.getCapital("France");
+        ArrayList<Capital> ca = a.getWorldCapital();
         // Display results
         a.displayCapitals(ca);
         a.displayCountry(c);
@@ -68,9 +68,9 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 //Connect to database locally
-                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+               // con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
-                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             } catch (SQLException sqle) {
@@ -496,27 +496,28 @@ public class App {
 
     /**
      *
-     * @param country
+     * @param
      * @return
      *
      */
-    public ArrayList<Capital> getCapital(String country) {
+    public ArrayList<Capital> getWorldCapital() {
         try {
               // Create an SQL statement
               Statement stmt = con.createStatement();
              // Create string for SQL statement
-              String strSelect = "SELECT capital.Name, capital.Country, capital.Population " +
-                     "FROM capital JOIN country ON city.CountryCode = country.Code " +
-                      "WHERE country.Continent = '" + country + "'";
+              String strSelect = "SELECT city.Name, country.Name, city.Population " +
+                     "FROM city JOIN country ON city.ID = country.Capital " +
+                     "ORDER BY city.Population DESC " ;
+                     // "WHERE country.Name = '" + country + "'";
               // Execute SQL statement
              ResultSet rset = stmt.executeQuery(strSelect);
               // Extract city information
              ArrayList<Capital> capitals = new ArrayList<Capital>();
               while (rset.next()) {
                   Capital ca = new Capital();
-                  ca.Name = rset.getString("country.Name");
-                  ca.Country = rset.getString("country.CountryCode");
-                  ca.Population = rset.getInt("capital.Population");
+                  ca.Name = rset.getString("city.Name");
+                  ca.Country = rset.getString("country.Name");
+                  ca.Population = rset.getInt("city.Population");
                   capitals.add(ca);
               }
              return capitals;

@@ -44,7 +44,7 @@ jobs:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         # Copy built JAR file.  JAR built in $TRAVIS_BUILD_DIR/
-        file: $TRAVIS_BUILD_DIR/target/groupF.jar
+        file: $TRAVIS_BUILD_DIR/target/Group-F.jar
         skip_cleanup: true
         on:
           branch: main

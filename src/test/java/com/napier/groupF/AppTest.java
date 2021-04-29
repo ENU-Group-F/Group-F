@@ -16,46 +16,90 @@ public class AppTest {
         app.connect("localhost:33060");
     }
 
+    /**
+     * test return if countries is null
+     */
     @Test
-    // test return if countries is null
+
     void displayCountriesTestNull() {
         app.displayCountries(null);
     }
 
+    /**
+     * test return if displayCountries returns an empty list
+     */
     @Test
-    // test return if displayCountries returns an empty list
     void displayCountriesTestEmpty() {
         ArrayList<Country> countries= new ArrayList<Country>();
         app.displayCountries(countries);
     }
 
+    /**
+     * test return if topCountriesContinent is given an invalid continent
+     */
     @Test
-    // test return if cities is null
+    void topContinentCountryInvalid(){app.topCountriesContinent(10, "Asai");
+    }
+
+    /**
+     * test return is topCountriesContinent is given valid parameters
+     */
+    @Test
+    void topContinentCountryTest(){
+        app.topCountriesContinent(10, "Asia");
+    }
+
+    /**
+     * test return if TopCountriesRegion is given an invalid Region
+     */
+    @Test
+    void topRegionCountryInvalid(){app.TopCountriesRegion(10, "Nort Europ");
+    }
+
+    /**
+     * test return if TopCountriesRegion is given valid Region
+     */
+    @Test
+    void topRegionCountryTest(){ app.TopCountriesRegion(10, "Northern Europe");
+    }
+
+    /**
+     * test return if cities is null
+     */
+    @Test
     void displayCitiesTestNull() {
         app.displayCities(null);
     }
 
+    /**
+     * test return if displayCities returns an empty list
+     */
     @Test
-    // test return if displayCities returns an empty list
     void displayCitiesTestEmpty() {
         ArrayList<City> cities= new ArrayList<City>();
         app.displayCities(cities);
     }
 
+    /**
+     * test return if topCitiesContinent is given an invalid continent
+     */
     @Test
-    // test return if topCitiesContinent is given an invalid continent
     void topCitiesContinentInvalid(){
         app.topCitiesContinent(10, "Europa");
     }
 
+    /**
+     * test return if topCitiesContinent is given valid parameters
+     */
     @Test
-    // test return if topCitiesContinent is given valid parameters
     void topCitiesContinentTest(){
         app.topCitiesContinent(10, "Europe");
     }
 
+    /**
+     * test return if capitals is null
+     */
     @Test
-        // test return if capitals is null
     void displayCapitalsTestNull() {
         app.displayCapitals(null);
     }
@@ -70,26 +114,34 @@ public class AppTest {
         app.displayCapitals(capitals);
     }
 
+    /**
+     * test return if TopContinentCapital is given an invalid continent
+     */
     @Test
-        // test return if TopContinentCapital is given an invalid continent
     void topContinentCapitalInvalid(){
         app.TopContinentCapital(10, "Europa");
     }
 
+    /**
+     * test return if TopContinentCapital is given a valid continent
+     */
     @Test
-        // test return if TopContinentCapital is given valid parameters
     void topContinentCapitalTest(){
         app.TopContinentCapital(10, "Europe");
     }
 
+    /**
+     * test return if TopRegionCapital is given an invalid Region
+     */
     @Test
-        // test return if TopRegionCapital is given an invalid Region
     void topRegionCapitalInvalid(){
         app.TopRegionCapital(10, "Nort Europ");
     }
 
+    /**
+     * test return if TopRegionCapital is given a valid Region
+     */
     @Test
-        // test return if TopRegionCapital is given valid parameters
     void topRegionCapitalTest(){
         app.TopRegionCapital(10, "Northern Europe");
     }

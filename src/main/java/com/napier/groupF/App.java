@@ -168,6 +168,178 @@ public class App {
         }
     }
 
+    /**
+     *
+     * @param continent
+     * @return
+     */
+    public ArrayList<Country> CountriesContinent(String continent) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY country.Population DESC ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param region
+     * @return
+     */
+    public ArrayList<Country> CountriesRegion(String region) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "WHERE country.Region = '" + region + "'" +
+                    "ORDER BY country.Population DESC ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Country> CountriesWorld(){
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "ORDER BY country.Population DESC ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param topX
+     * @param continent
+     * @return
+     */
+    public ArrayList<Country> topCountriesContinent(Integer topX, String continent) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY country.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param topX
+     * @param region
+     * @return
+     */
+    public ArrayList<Country> TopCountriesRegion(Integer topX, String region) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "WHERE country.Region = '" + region + "'" +
+                    "ORDER BY country.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
 
     /**
      *

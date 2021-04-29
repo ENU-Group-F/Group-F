@@ -8,7 +8,7 @@ import java.sql.SQLException;
 //import java.io.FileWriter;
 //import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class App {
 
@@ -47,8 +47,10 @@ public class App {
         ArrayList<City> topCitiesRegion = a.topCitiesRegion(10, "Southern Europe");
         ArrayList<City> topCitiesCountry = a.topCitiesCountry(10, "United Kingdom");
         ArrayList<City> topCitiesDistrict = a.topCitiesDistrict(10, "England");
-        // Display Results
+        // Display areas populations
         a.displayCities(topCitiesContinent);
+        ArrayList<Population> areasPopulation = a.areasPopulation();
+        a.displayAreasPopulation(areasPopulation);
         // Disconnect from database
         a.disconnect();
     }
@@ -752,6 +754,64 @@ public class App {
             String capital_string = ca.Name + "," + ca.Country +  "," + ca.Population;
             System.out.println(capital_string);
 
+        }
+    }
+
+    /**
+     * @param populations in different areas
+     */
+    public void displayAreasPopulation(ArrayList<Population> areasPopulation) {
+
+
+        // Check capitals is not null
+        if (areasPopulation == null) {
+            System.out.println("No population");
+            return;
+        }
+        // Print header
+        System.out.println("Populations List");
+        // Print a comma separated list of the cities
+        System.out.println("Area Type,Area Name,Population");
+        for (Population pop : areasPopulation){
+            String capital_string = pop.areaKind + "," + pop.name +  "," + pop.population;
+            System.out.println(capital_string);
+        }
+    }
+
+    public ArrayList<Population> areasPopulation() {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "" +
+                    "SELECT 'world' as kind, 'World' as name, sum(population )  as population from country " +
+                    "UNION ALL " +
+                    "SELECT 'continent' as kind, continent as name, sum(population )  as population from country group by continent" +
+                    "UNION ALL " +
+                    "SELECT 'region' as kind, region as name, sum(population ) as population  from country group by region" +
+                    "UNION ALL " +
+                    "SELECT 'country' as kind, country as name, population as population from country " +
+                    "UNION ALL " +
+                    "SELECT 'district' as kind, district as name, sum(population ) as population from city group by district" +
+                    "UNION ALL " +
+                    "SELECT 'city' as kind, name as name, sum(population ) as population from city ;";
+
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Population> pops = new ArrayList();
+            while (rset.next()) {
+                Population pop = new Population();
+                pop.areaKind = rset.getString("kind");
+                pop.name = rset.getString("name");
+                pop.population = rset.getInt("population");
+                pops.add(pop);
+            }
+            return pops;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Populations report");
+            return null;
         }
     }
 

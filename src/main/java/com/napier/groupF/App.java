@@ -20,9 +20,12 @@ public class App {
         // the following statements are to test the queries and should later be replaced with user input
         //Get country
         Country c = a.getCountry("France");
-        ArrayList<Country> countries = a.listCountries("Europe");
+        ArrayList<Country> countries = a.CountriesWorld();
+        ArrayList<Country> ContinentCountries = a.CountriesContinent("Europe");
+        ArrayList<Country> RegionCountries = a.CountriesRegion("Southern Europe");
         //Get top Countries
-        ArrayList<Country> topCountriesWorld = a.topCountriesWorld();
+        ArrayList<Country> topCountriesRegion = a.TopCountriesRegion(3, "Southern Europe");
+        ArrayList<Country> topCountriesContinent = a.topCountriesContinent(3, "Europe");
         //Get Capital
         ArrayList<Capital> WorldCapitals = a.getWorldCapital();
         ArrayList<Capital> ContinentCapitals = a.getContinentCapital("Europe");
@@ -33,10 +36,14 @@ public class App {
         // Display results
        // a.displayCapitals(WorldCapitals);
        // a.displayCapitals(ContinentCapitals);
-        a.displayCapitals(TopContinentCapitals);
-        a.displayCapitals(TopWorldCapitals);
+       // a.displayCapitals(TopContinentCapitals);
+       // a.displayCapitals(TopWorldCapitals);
         //a.displayCountry(c);
-        a.displayCountries(topCountriesWorld);
+       // a.displayCountries(countries);
+       // a.displayCountries(ContinentCountries);
+       // a.displayCountries(RegionCountries);
+        a.displayCountries(topCountriesRegion);
+        a.displayCountries(topCountriesContinent);
         // get cities
         ArrayList<City> cities = a.listCities("Europe");
         // Display results
@@ -161,14 +168,15 @@ public class App {
      * @param continent
      * @return
      */
-    public ArrayList<Country> listCountries(String continent) {
+    public ArrayList<Country> CountriesContinent(String continent) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
                             "FROM country " +
-                            "WHERE country.Continent = '" + continent + "'";
+                            "WHERE country.Continent = '" + continent + "'" +
+                            "ORDER BY country.Population DESC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract city information
@@ -191,18 +199,50 @@ public class App {
 
     /**
      *
-     * @param topX
+     * @param region
      * @return
      */
-    public ArrayList<Country> topCountriesWorld(){//(Integer topX) {
+    public ArrayList<Country> CountriesRegion(String region) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
                     "FROM country " +
-                    "ORDER BY country.Population DESC "
-                   ;// "LIMIT " + topX;
+                    "WHERE country.Region = '" + region + "'" +
+                    "ORDER BY country.Population DESC ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Country> CountriesWorld(){
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "ORDER BY country.Population DESC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract country information
@@ -222,6 +262,80 @@ public class App {
             return null;
         }
     }
+
+    /**
+     *
+     * @param topX
+     * @param continent
+     * @return
+     */
+    public ArrayList<Country> topCountriesContinent(Integer topX, String continent) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY country.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param topX
+     * @param region
+     * @return
+     */
+    public ArrayList<Country> TopCountriesRegion(Integer topX, String region) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "WHERE country.Region = '" + region + "'" +
+                    "ORDER BY country.Population DESC " +
+                    "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
+        }
+    }
+
+
 
     /**
      *

@@ -76,9 +76,9 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 //Connect to database locally
-                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
-                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+               // con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
                 break;
             } catch (SQLException sqle) {
@@ -502,7 +502,35 @@ public class App {
         }
     }
 
-    /**
+
+
+    public Capital getCapital(String country) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, country.Name, city.Population " +
+                    "FROM city JOIN country ON city.ID = country.Capital " +
+                    "WHERE country.Name = '" + country + "'";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            if (rset.next()) {
+                Capital ca = new Capital();
+                ca.Name = rset.getString("city.Name");
+                ca.Country = rset.getString("country.Name");
+                ca.Population = rset.getInt("city.Population");
+                return ca;
+            } else
+                return null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get Capital details");
+            return null;
+        }
+    }
+
+     /**
      *
      * @param
      * @return
@@ -516,11 +544,10 @@ public class App {
               String strSelect = "SELECT city.Name, country.Name, city.Population " +
                      "FROM city JOIN country ON city.ID = country.Capital " +
                      "ORDER BY city.Population DESC " ;
-                     // "WHERE country.Name = '" + country + "'";
               // Execute SQL statement
              ResultSet rset = stmt.executeQuery(strSelect);
               // Extract city information
-             ArrayList<Capital> capitals = new ArrayList<Capital>();
+            ArrayList<Capital> capitals = new ArrayList<Capital>();
               while (rset.next()) {
                   Capital ca = new Capital();
                   ca.Name = rset.getString("city.Name");

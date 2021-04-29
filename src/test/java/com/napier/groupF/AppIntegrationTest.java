@@ -19,6 +19,11 @@ public class AppIntegrationTest
         app.connect("localhost:33060");
     }
 
+    /**
+     * Testing that expected results returned for Countries
+     * Data from world.sql
+     * Accessed on 29/04/21
+     */
     @Test
     void testGetCountry()
     {
@@ -28,7 +33,11 @@ public class AppIntegrationTest
         assertEquals(c.Region, "Western Europe");
         assertEquals(c.Population, 59225700);
     }
-
+    /**
+     * Testing that expected results returned for Cities
+     * Data from world.sql
+     * Accessed on 29/04/21
+     */
     @Test
     void testGetCity()
     {
@@ -37,5 +46,18 @@ public class AppIntegrationTest
         assertEquals(c.CountryCode, "GBR");
         assertEquals(c.District, "Scotland");
         assertEquals(c.Population, 450180);
+    }
+    /**
+     * Testing that expected results returned for Capitals
+     * Data from world.sql
+     * Accessed on 29/04/21
+     */
+    @Test
+    void testGetCapital()
+    {
+        Capital ca = app.getCapital("France");
+        assertEquals(ca.Name, "Paris");
+        assertEquals(ca.Country, "France");
+        assertEquals(ca.Population, 2125246);
     }
 }

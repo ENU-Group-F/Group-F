@@ -439,10 +439,41 @@ public class App {
  * All queries that return a City report
  */
     /**
+     * Returns all the cities in the world organised by largest population to smallest
+     * @return cities
+     */
+    public ArrayList<City> listCitiesWorld() {
+    try {
+        // Create an SQL statement
+        Statement stmt = con.createStatement();
+        // Create string for SQL statement
+        String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                "FROM city JOIN country ON city.CountryCode = country.Code " +
+                "ORDER BY city.Population DESC";
+        // Execute SQL statement
+        ResultSet rset = stmt.executeQuery(strSelect);
+        // Extract city information
+        ArrayList<City> cities = new ArrayList<City>();
+        while (rset.next()) {
+            City c = new City();
+            c.Name = rset.getString("city.Name");
+            c.CountryCode = rset.getString("city.CountryCode");
+            c.District = rset.getString("city.District");
+            c.Population = rset.getInt("city.Population");
+            cities.add(c);
+        }
+        return cities;
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+        System.out.println("Failed to get city details");
+        return null;
+    }
+}
+    /**
      * Return all the cities in a continent organised by largest population to smallest.
      *
      * @param continent
-     * @return
+     * @return cities
      */
     public ArrayList<City> listCitiesContinent(String continent) {
         try {
@@ -451,7 +482,8 @@ public class App {
             // Create string for SQL statement
             String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
                     "FROM city JOIN country ON city.CountryCode = country.Code " +
-                    "WHERE country.Continent = '" + continent + "'";
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY city.Population DESC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract city information
@@ -476,7 +508,7 @@ public class App {
      * Return all the cities in a region organised by largest population to smallest.
      *
      * @param region
-     * @return
+     * @return cities
      */
     public ArrayList<City> listCitiesRegion(String region) {
         try {

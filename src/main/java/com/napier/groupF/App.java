@@ -3,10 +3,6 @@ package com.napier.groupF;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-//import java.io.BufferedWriter;
-//import java.io.File;
-//import java.io.FileWriter;
-//import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -18,44 +14,65 @@ public class App {
         // Connect to database
         a.connect("localhost:33060");
         // the following statements are to test the queries and should later be replaced with user input
-        //Get country
-        Country c = a.getCountry("France");
-        ArrayList<Country> countries = a.CountriesWorld();
+        //Get country Queries
+        //Country c = a.getCountry("France");
+        ArrayList<Country> WorldCountries = a.CountriesWorld();
         ArrayList<Country> ContinentCountries = a.CountriesContinent("Europe");
         ArrayList<Country> RegionCountries = a.CountriesRegion("Southern Europe");
         //Get top Countries
-        ArrayList<Country> topCountriesRegion = a.TopCountriesRegion(3, "Southern Europe");
-        ArrayList<Country> topCountriesContinent = a.topCountriesContinent(3, "Europe");
+        ArrayList<Country> TopContinentCountries = a.topCountriesContinent(3,"Europe");
+        ArrayList<Country> TopRegionCountries = a.TopCountriesRegion(3,"Southern Europe");
+        ArrayList<Country> topCountriesWorld = a.topCountriesWorld();
+        //Display Results for Countries
+        a.displayCountries(WorldCountries);
+        a.displayCountries(ContinentCountries);
+        a.displayCountries(RegionCountries);
+        a.displayCountries(TopContinentCountries);
+        a.displayCountries(TopRegionCountries);
+        a.displayCountries(topCountriesWorld);
         //Get Capital
         ArrayList<Capital> WorldCapitals = a.getWorldCapital();
         ArrayList<Capital> ContinentCapitals = a.getContinentCapital("Europe");
         ArrayList<Capital> RegionCapitals = a.getRegionCapital("Southern Europe");
-        ArrayList<Capital> TopRegionCapitals = a.TopRegionCapital(3,"Southern Europe");
-        ArrayList<Capital> TopContinentCapitals = a.TopContinentCapital(3,"europe");
+        ArrayList<Capital> TopRegionCapitals = a.TopRegionCapital(3, "Southern Europe");
+        ArrayList<Capital> TopContinentCapitals = a.TopContinentCapital(3, "europe");
         ArrayList<Capital> TopWorldCapitals = a.TopWorldCapital(3);
-        // Display results
-       // a.displayCapitals(WorldCapitals);
-       // a.displayCapitals(ContinentCapitals);
-       // a.displayCapitals(TopContinentCapitals);
-       // a.displayCapitals(TopWorldCapitals);
-        //a.displayCountry(c);
-       // a.displayCountries(countries);
-       // a.displayCountries(ContinentCountries);
-       // a.displayCountries(RegionCountries);
-        a.displayCountries(topCountriesRegion);
-        a.displayCountries(topCountriesContinent);
+        // Display results for Capitals
+        a.displayCapitals(WorldCapitals);
+        a.displayCapitals(ContinentCapitals);
+        a.displayCapitals(RegionCapitals);
+        a.displayCapitals(TopContinentCapitals);
+        a.displayCapitals(TopWorldCapitals);
+        a.displayCapitals(TopRegionCapitals);
+        a.displayCountries(topCountriesWorld);
         // get cities
-        ArrayList<City> cities = a.listCities("Europe");
+        ArrayList<City> cities = a.listCitiesContinent("Europe");
         // Display results
         a.displayCities(cities);
+        // Get cities
+        ArrayList<City> CitiesWorld = a.listCitiesWorld();
+        ArrayList<City> CitiesContinent = a.listCitiesContinent("Asia");
+        ArrayList<City> CitiesRegion = a.listCitiesRegion("Polynesia");
+        ArrayList<City> CitiesCountry = a.listCitiesCountry("Japan");
+        ArrayList<City> CitiesDistrict = a.listCitiesDistrict("Noord-Brabant");
+        // Display Results for cities
+        a.displayCities(CitiesWorld);
+        a.displayCities(CitiesContinent);
+        a.displayCities(CitiesRegion);
+        a.displayCities(CitiesCountry);
+        a.displayCities(CitiesDistrict);
         // Get top cities
         ArrayList<City> topCitiesWorld = a.topCitiesWorld(10);
         ArrayList<City> topCitiesContinent = a.topCitiesContinent(10, "Europe");
         ArrayList<City> topCitiesRegion = a.topCitiesRegion(10, "Southern Europe");
         ArrayList<City> topCitiesCountry = a.topCitiesCountry(10, "United Kingdom");
         ArrayList<City> topCitiesDistrict = a.topCitiesDistrict(10, "England");
-        // Display Results
+        // Display Results for top cities
+        a.displayCities(topCitiesWorld);
         a.displayCities(topCitiesContinent);
+        a.displayCities(topCitiesRegion);
+        a.displayCities(topCitiesCountry);
+        a.displayCities(topCitiesDistrict);
         // Disconnect from database
         a.disconnect();
     }
@@ -65,6 +82,7 @@ public class App {
      */
 
     private Connection con = null;
+
     /**
      * Connect to the MySQL database.
      */
@@ -83,11 +101,13 @@ public class App {
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 //Connect to database locally
-               // con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
+
+                //con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=true", "root", "example");
                 // Connect to database inside docker
+                 con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 System.out.println("Successfully connected");
-                break;
+              break;
             } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + Integer.toString(i));
                 System.out.println(sqle.getMessage());
@@ -101,7 +121,8 @@ public class App {
  * Used for integration tests
  */
     /**
-     *Get a single Country details using name
+     * Get a single country given valid string name
+     *
      * @param name
      * @return
      */
@@ -134,7 +155,8 @@ public class App {
     }
 
     /**
-     * Get a single cities details using name
+    * Get a single City given valid string name
+     *
      * @param name
      * @return
      */
@@ -167,7 +189,7 @@ public class App {
     }
 
     /**
-     * Get a single capital's details given a country
+     * Get a single capital details given a valid string country
      * @param country
      * @return
      */
@@ -202,7 +224,7 @@ public class App {
  */
 
     /**
-     *Get all countries in a continent ordered by population
+     * Get all countries in a continent
      * @param continent
      * @return
      */
@@ -212,9 +234,9 @@ public class App {
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
-                            "FROM country " +
-                            "WHERE country.Continent = '" + continent + "'" +
-                            "ORDER BY country.Population DESC ";
+                    "FROM country " +
+                    "WHERE country.Continent = '" + continent + "'" +
+                    "ORDER BY country.Population DESC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract country information
@@ -270,10 +292,11 @@ public class App {
     }
 
     /**
-     *Get all countries in the world ordered by population
+     * Get all countries in the world ordered by population
+     *
      * @return
      */
-    public ArrayList<Country> CountriesWorld(){
+    public ArrayList<Country> CountriesWorld() {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
@@ -338,7 +361,8 @@ public class App {
     }
 
     /**
-     *Get the top X countries in a region ordered by population. Given a valid int X and string region
+     * Get the top X countries in a region ordered by population. Given a valid int X and string region
+     *
      * @param topX
      * @param region
      * @return
@@ -377,33 +401,57 @@ public class App {
 
 
     /**
+     * Get the top X countries in teh world ordered by population. Given a valid int topX
      *
-     * @param c
+     * @param //topX
+     * @return
      */
-    public void displayCountry(Country c) {
-        if (c != null) {
-            System.out.println("Name: " + c.Name + "\n" +
-                    "Country: " + c.Code + "\n" +
-                    "Region: " + c.Region + "\n" +
-                    "Population: " + c.Population);
+    public ArrayList<Country> topCountriesWorld() {//(Integer topX) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT country.Name, country.Code, country.Region, country.Population " +
+                    "FROM country " +
+                    "ORDER BY country.Population DESC ";// "LIMIT " + topX;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract country information
+            ArrayList<Country> countries = new ArrayList<Country>();
+            while (rset.next()) {
+                Country co = new Country();
+                co.Name = rset.getString("country.name");
+                co.Code = rset.getString("country.Code");
+                co.Region = rset.getString("country.Region");
+                co.Population = rset.getInt("country.Population");
+                countries.add(co);
+            }
+            return countries;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get country details");
+            return null;
         }
     }
+
+
 /**
  * All queries that return a City report
  */
     /**
-     *Get the cities in a continent. Given a valid string continent
+     * Return all the cities in a continent organised by largest population to smallest.
+     *
      * @param continent
      * @return
      */
-    public ArrayList<City> listCities(String continent) {
+    public ArrayList<City> listCitiesContinent(String continent) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
-                            "FROM city JOIN country ON city.CountryCode = country.Code " +
-                            "WHERE country.Continent = '" + continent + "'";
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE country.Continent = '" + continent + "'";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract city information
@@ -425,7 +473,113 @@ public class App {
     }
 
     /**
-     *Get the top most populated cities in the world. Given a valid int topX
+     * Return all the cities in a region organised by largest population to smallest.
+     *
+     * @param region
+     * @return
+     */
+    public ArrayList<City> listCitiesRegion(String region) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE country.Continent = '" + region + "'" +
+                    "ORDER BY city.Population DESC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    /**
+     * Return all the cities in a country organised by largest population to smallest.
+     *
+     * @param country
+     * @return
+     */
+    public ArrayList<City> listCitiesCountry(String country) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE country.Name = '" + country + "'" +
+                    "ORDER BY city.Population DESC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    /**
+     * Return all the cities in a district organised by largest population to smallest.
+     *
+     * @param district
+     * @return
+     */
+    public ArrayList<City> listCitiesDistrict(String district) {
+        try {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, city.CountryCode, city.District, city.Population " +
+                    "FROM city JOIN country ON city.CountryCode = country.Code " +
+                    "WHERE city.District = '" + district + "'" +
+                    "ORDER BY city.Population DESC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract city information
+            ArrayList<City> cities = new ArrayList<City>();
+            while (rset.next()) {
+                City c = new City();
+                c.Name = rset.getString("city.Name");
+                c.CountryCode = rset.getString("city.CountryCode");
+                c.District = rset.getString("city.District");
+                c.Population = rset.getInt("city.Population");
+                cities.add(c);
+            }
+            return cities;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
+    /**
+     * Get the topX cities in teh world given a valid int topX
+     *
      * @param topX
      * @return
      */
@@ -459,7 +613,8 @@ public class App {
     }
 
     /**
-     *Get the top most populated cities in a continent. Given a valid int topX and string continent
+     * Get the topX cities in a continent given a valid int topX and string continent
+     *
      * @param topX
      * @param continent
      * @return
@@ -531,7 +686,8 @@ public class App {
     }
 
     /**
-     *Get the top most populated cities in a country. Given a valid int topX and string country
+     * Get the topX cities in a country given a valid int topX and string country
+     *
      * @param topX
      * @param country
      * @return
@@ -567,7 +723,8 @@ public class App {
     }
 
     /**
-     *Get the top most populated cities in a district. Given a valid int topX and string district
+     * Get the topX cities in a district given a valid int topX and string district
+     *
      * @param topX
      * @param district
      * @return
@@ -603,47 +760,48 @@ public class App {
     }
 
 
-
-
 /**
  * All queries that produce a Capital report
  */
 
-     /**
-     *
+
+    /**
      * @param
-     * @return
-     *Get Capital Cities of the world by population
+     * @return Get Capital Cities of the world by population
      */
     public ArrayList<Capital> getWorldCapital() {
         try {
-              // Create an SQL statement
-              Statement stmt = con.createStatement();
-             // Create string for SQL statement
-              String strSelect = "SELECT city.Name, country.Name, city.Population " +
-                     "FROM city JOIN country ON city.ID = country.Capital " +
-                     "ORDER BY city.Population DESC " ;
-              // Execute SQL statement
-             ResultSet rset = stmt.executeQuery(strSelect);
-              // Extract city information
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect = "SELECT city.Name, country.Name, city.Population " +
+                    "FROM city JOIN country ON city.ID = country.Capital " +
+                    "ORDER BY city.Population DESC ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract capital information
             ArrayList<Capital> capitals = new ArrayList<Capital>();
-              while (rset.next()) {
-                  Capital ca = new Capital();
-                  ca.Name = rset.getString("city.Name");
-                  ca.Country = rset.getString("country.Name");
-                  ca.Population = rset.getInt("city.Population");
-                  capitals.add(ca);
-              }
-             return capitals;
-          } catch (Exception e) {
-              System.out.println(e.getMessage());
-              System.out.println("Failed to get capital details");
-              return null;
-         }
+            while (rset.next()) {
+                Capital ca = new Capital();
+                ca.Name = rset.getString("city.Name");
+                ca.Country = rset.getString("country.Name");
+                ca.Population = rset.getInt("city.Population");
+                capitals.add(ca);
+            }
+            return capitals;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get capital details");
+            return null;
+        }
     }
 
+
+
+
     /**
-     *Get the capitals of a continent. Given a valid string continent
+     * Get the capitals of a continent. Given a valid string continent
+     *
      * @param continent
      * @return
      */
@@ -656,10 +814,10 @@ public class App {
             String strSelect = "SELECT city.Name, country.Name, city.Population " +
                     "FROM city JOIN country ON city.ID = country.Capital " +
                     "WHERE country.Continent = '" + continent + "'" +
-                    "ORDER BY city.Population DESC " ;
+                    "ORDER BY city.Population DESC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
-            // Extract city information
+            // Extract capital information
             ArrayList<Capital> capitals = new ArrayList<Capital>();
             while (rset.next()) {
                 Capital cap = new Capital();
@@ -677,7 +835,8 @@ public class App {
     }
 
     /**
-     *Get the capitals of a region. Given a valid string region
+     * Get the capitals of a region. Given a valid string region
+     *
      * @param region
      * @return
      */
@@ -689,10 +848,10 @@ public class App {
             String strSelect = "SELECT city.Name, country.Name, city.Population " +
                     "FROM city JOIN country ON city.ID = country.Capital " +
                     "WHERE country.Region = '" + region + "'" +
-                    "ORDER BY city.Population DESC " ;
+                    "ORDER BY city.Population DESC ";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
-            // Extract city information
+            // Extract capital information
             ArrayList<Capital> capitals = new ArrayList<Capital>();
             while (rset.next()) {
                 Capital cap = new Capital();
@@ -728,7 +887,7 @@ public class App {
                     "LIMIT " + topX;
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
-            // Extract city information
+            // Extract capital information
             ArrayList<Capital> capitals = new ArrayList<Capital>();
             while (rset.next()) {
                 Capital cap = new Capital();
@@ -746,7 +905,8 @@ public class App {
     }
 
     /**
-     *Get the top most populated capitals in a continent. Given a valid int topX and string continent
+     * Get the top most populated capitals in a continent. Given a valid int topX and string continent
+     *
      * @param topX
      * @param continent
      * @return
@@ -763,7 +923,7 @@ public class App {
                     "LIMIT " + topX;
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
-            // Extract city information
+            // Extract capital information
             ArrayList<Capital> capitals = new ArrayList<Capital>();
             while (rset.next()) {
                 Capital cap = new Capital();
@@ -781,7 +941,8 @@ public class App {
     }
 
     /**
-     *Get the top most populated capitals in the world. Given a valid int topX
+     * Get the top most populated capitals in the world. Given a valid int topX
+     *
      * @param topX
      * @return
      */
@@ -813,12 +974,14 @@ public class App {
         }
     }
 
-    /**
-     * Display methods for Country, City and Capital
-     */
+
+/**
+ * Display methods for Country, City and Capital
+ */
 
     /**
-     *Display Country array as a comma separated list
+     * Display Country array as a comma separated list
+     *
      * @param countries
      */
     public void displayCountries(ArrayList<Country> countries) {
@@ -832,14 +995,16 @@ public class App {
         // Loop over all countries in the list
         //        Print a comma separated list of the countries
         System.out.println("Name,Code,Region,Population");
-        for (Country co : countries){
+        for (Country co : countries) {
             String country_string = co.Name + "," + co.Code + "," + co.Region + "," + co.Population;
             System.out.println(country_string);
         }
     }
 
     /**
-     *Display City array as comma separated list
+     * Display City array as comma separated list
+     *
+
      * @param cities
      */
     public void displayCities(ArrayList<City> cities) {
@@ -858,6 +1023,7 @@ public class App {
 
         }
     }
+
     /**
      *Display Capital array as comma separated list
      * @param capitals
@@ -873,12 +1039,13 @@ public class App {
 
 //        Print a comma separated list of the capitals
         System.out.println("Name,Country,Population");
-        for (Capital ca : capitals){
-            String capital_string = ca.Name + "," + ca.Country +  "," + ca.Population;
+        for (Capital ca : capitals) {
+            String capital_string = ca.Name + "," + ca.Country + "," + ca.Population;
             System.out.println(capital_string);
 
         }
     }
+
 
     /**
      * Disconnect from the MySQL database.

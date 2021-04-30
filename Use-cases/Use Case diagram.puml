@@ -1,26 +1,114 @@
 @startuml
-
-actor BM as "Brand Manager"
-
-actor BR as "Branch Manager"
+left to right direction
 
 rectangle Database
 
-rectangle "Company System" {
-    usecase UC1 as "Get population
-                    by region"
-    usecase UCa as "Print populations"
+rectangle Reporting {
 
-    usecase UC2 as "Get top capital
-    cities by continent"
-    usecase UCb as "Print capitals"
-    BM - UC1
-    UC1 ..> UCa : include
-    UC1 - Database
+actor BM as "Brand Manager"
+actor ED as "Epidemiologist"
+actor MM as "Marketing Manager"
+actor BR as "Branch Manager"
+actor LP as "Location Planner"
 
-    BR - UC2
-    UC2 ..> UCb : include
-    UC2 - Database
-}
+package Country_Reports {
+  usecase "All Countries World" as UC1
+  usecase "All Countries Continent" as UC2
+  usecase "All Countries Region" as UC3
+  usecase "Top Countries World" as UC4
+  usecase "Top Countries Continent" as UC5
+  usecase "Top Countries Region" as UC6
+  usecase "Print Countries" as UCa
+  }
+
+package City_Reports {
+  usecase "All Cities World" as UC7
+  usecase "All Cities Continent" as UC8
+  usecase "All Cities Region" as UC9
+  usecase "All Cities Country" as UC10
+  usecase "All Cities District" as UC11
+  usecase "Top Cities World" as UC12
+  usecase "Top Cities Continent" as UC13
+  usecase "Top Cities Region" as UC14
+  usecase "Top Cities Country" as UC15
+  usecase "Top Cities District" as UC16
+  usecase "Print Cities" as UCb
+  }
+
+package Capital_Reports {
+  usecase "All Capitals World" as UC17
+  usecase "All Capitals Continent" as UC18
+  usecase "All Capitals Region" as UC19
+  usecase "Top Capitals World" as UC20
+  usecase "Top Capitals Continent" as UC21
+  usecase "Top Capitals Region" as UC22
+  usecase "Print Capitals" as UCc
+  }
+
+package In-Out_Reports {
+  usecase "In/Out Cities Continent" as UC23
+  usecase "In/Out Cities Region" as UC24
+  usecase "In/Out Cities Country" as UC25
+  usecase "Print In/Out Reports" as UCd
+  }
+  }
+
+  BM -> UC1
+  BM -> UC2
+  BM -> UC3
+  BM -> UC4
+  BM -> UC5
+  BM -> UC6
+  UC1 ..> UCa
+  UC2 ..> UCa
+  UC3 ..> UCa
+  UC4 ..> UCa
+  UC5 ..> UCa
+  UC6 ..> UCa
+
+  ED -> UC7
+  ED -> UC8
+  ED -> UC9
+  ED -> UC10
+  ED -> UC11
+  MM -> UC12
+  MM -> UC13
+  MM -> UC14
+  MM -> UC15
+  MM -> UC16
+  UC7 ..> UCb
+  UC8 ..> UCb
+  UC9 ..> UCb
+  UC10 ..> UCb
+  UC10 ..> UCb
+  UC11 ..> UCb
+  UC12 ..> UCb
+  UC13 ..> UCb
+  UC14 ..> UCb
+  UC15 ..> UCb
+  UC16 ..> UCb
+
+  BR -> UC17
+  BR -> UC18
+  BR -> UC19
+  BR -> UC20
+  BR -> UC21
+  BR -> UC22
+  UC17 ..> UCc
+  UC18 ..> UCc
+  UC19 ..> UCc
+  UC20 ..> UCc
+  UC21 ..> UCc
+  UC22 ..> UCc
+
+  LP -> UC23
+  LP -> UC24
+  LP -> UC25
+  UC23 ..> UCd
+  UC24 ..> UCd
+  UC25 ..> UCd
+
+Databse -> Reporting
+
 
 @enduml
